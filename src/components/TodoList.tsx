@@ -1,34 +1,30 @@
 import React, { useState } from "react";
-import { TextField } from "@material-ui/core";
+import {ToDoElementType} from "../types/ToDoElementType";
+import {AddElementInput} from "./AddElementInput";
 
-export const TodoList = () => {
-  const [todos, setTodos] = useState(["Zrobić kolację", "Naprawić zlew"]);
-  const [newTodo, setNewTodo] = useState("");
+type TodoListProps = {
+    defaultElements: ToDoElementType[]
+}
+
+export const TodoList = ({defaultElements}: TodoListProps) => {
+  const [todos, setTodos] = useState<ToDoElementType[]>(defaultElements);
+
+  const addNewElementToList = (element: ToDoElementType) => {
+      setTodos([...todos, element]);
+  }
+
+  const removeElement = (elementId: string) => {
+      setTodos([...todos.filter(item => item.id !== elementId)]);
+  }
+
   return (
     <>
-      <form>
-        <TextField
-          label="Co nowego?"
-          value={newTodo}
-          onChange={e => setNewTodo(e.target.value)}
-        />
-        <button
-          style={{ display: "none" }}
-          type="submit"
-          onClick={e => {
-            e.preventDefault();
-            setTodos([...todos, newTodo]);
-            setNewTodo("");
-          }}
-        >
-          Add
-        </button>
-      </form>
+      <AddElementInput addNewElementToList={addNewElementToList} />
       <div>
         {todos.map(e => (
-          <div>{e}</div>
+          <div key={e.id}><span className="remove-button" onClick={() => removeElement(e.id)}>X</span> {e.description} </div>
         ))}
       </div>
     </>
   );
-}; // Miłego dnia :)
+};
