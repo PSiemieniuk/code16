@@ -1,3 +1,3 @@
-# code16
+# Code16Challenge
 
-
+Wesprzyj Maję: https://www.siepomaga.pl/code16challenge
