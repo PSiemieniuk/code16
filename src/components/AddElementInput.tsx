@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {TextField} from "@material-ui/core";
-import {useState} from "react";
-import { v4 as uuidv4 } from 'uuid';
+import {FormEvent, useState} from "react";
 import {ToDoElementType} from "../types/ToDoElementType";
+import getNewUuid from "../utils/uuidGenerator";
 
 type Props = {
     addNewElementToList: (element: ToDoElementType) => void;
@@ -11,10 +11,11 @@ type Props = {
 export const AddElementInput = ({addNewElementToList}: Props) => {
     const [description, setDescription] = useState<string>("");
 
-    const addNewElement = () => {
+    const addNewElement = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if(description) {
             const newElement: ToDoElementType = {
-                id: uuidv4(),
+                id: getNewUuid(),
                 description: description
             }
             setDescription("");
@@ -24,8 +25,9 @@ export const AddElementInput = ({addNewElementToList}: Props) => {
 
     return (
         <>
-            <form>
+            <form data-testid="add-element-input_form" onSubmit={addNewElement}>
                 <TextField
+                    inputProps={{ "data-testid": "add-element-input_text-field" }}
                     label="Co nowego?"
                     value={description}
                     onChange={e => setDescription(e.target.value)}
@@ -33,10 +35,6 @@ export const AddElementInput = ({addNewElementToList}: Props) => {
                 <button
                     style={{ display: "none" }}
                     type="submit"
-                    onClick={e => {
-                        e.preventDefault();
-                        addNewElement();
-                    }}
                 />
             </form>
         </>
